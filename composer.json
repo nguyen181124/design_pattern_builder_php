@@ -1,0 +1,14 @@
+{
+    "name": "nguyen/design-patterns",
+    "autoload": {
+        "psr-4": {
+            "Nguyen\\DesignPatterns\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nguyen181124",
+            "email": "nguyen181124@gmail.com"
+        }
+    ]
+}
