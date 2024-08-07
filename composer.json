@@ -1,5 +1,6 @@
 {
     "name": "nguyenzz/design-patterns",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Nguyen\\DesignPatterns\\": "src/"
