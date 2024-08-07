@@ -1,5 +1,5 @@
 {
-    "name": "nguyen/design-patterns",
+    "name": "nguyenzz/design-patterns",
     "autoload": {
         "psr-4": {
             "Nguyen\\DesignPatterns\\": "src/"
