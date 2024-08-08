@@ -21,8 +21,6 @@ class MysqlQueryBuilder implements SQLQueryBuilder
 
     public static function __callStatic(string $name, array $arguments)
     {
-        // TODO: Implement __callStatic() method.
-
         return (new static)->{"exec" . $name}(...$arguments);
     }
 
@@ -35,16 +33,6 @@ class MysqlQueryBuilder implements SQLQueryBuilder
 
         $this->query->base = "INSERT INTO " . $table . " ($columns) VALUES ($values)";
         $this->query->type = 'insert';
-
-        return $this;
-    }
-
-
-    public function execselect(string $table, array $columns): SQLQueryBuilder
-    {
-        $this->query->type = 'select';
-        $this->query->select = empty($columns) ? "*" : implode(", ", $columns);
-
 
         return $this;
     }
@@ -183,8 +171,6 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         $this->query->alter = "ALTER TABLE " . $table . " ADD COLUMN " . $column . " " . $data_type;
         $this->query->type = 'alter';
 
-        $this->executeAlterQuery();
-
         return $this;
     }
 
@@ -192,8 +178,6 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     {
         $this->query->alter = "ALTER TABLE " . $table . " DROP COLUMN " . $column;
         $this->query->type = 'alter';
-
-        $this->executeAlterQuery();
 
         return $this;
     }
@@ -203,8 +187,6 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         $this->query->alter = "ALTER TABLE " . $table . " MODIFY COLUMN " . $column . " " . $data_type;
         $this->query->type = 'alter';
 
-        $this->executeAlterQuery();
-
         return $this;
     }
 
@@ -212,8 +194,6 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     {
         $this->query->alter = "ALTER TABLE " . $table . " RENAME TO " . $newname;
         $this->query->type = 'alter';
-
-        $this->executeAlterQuery();
 
         return $this;
     }
@@ -248,7 +228,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         print_r($sql);
         $db = new Database();
         try {
-            $qr = $db->connect()->query($sql);
+            $qr = $db->connect('localhost', 'root', 'abc1234', 'BT')->query($sql);
         } catch (\PDOException $e) {
             echo "Error executing query: " . $e->getMessage();
             return [];
@@ -260,14 +240,14 @@ class MysqlQueryBuilder implements SQLQueryBuilder
 
         return $ar;
     }
-
+    
     public function executeAlterQuery(): bool
     {
         $sql = $this->query->alter;
         print_r($sql);
         $db = new Database();
         try {
-            $stmt = $db->connect()->prepare($sql);
+            $stmt = $db->connect('localhost', 'root', 'abc1234', 'BT')->prepare($sql);
             $stmt->execute();
             return true;
         } catch (\PDOException $e) {
@@ -277,3 +257,4 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
 }
+

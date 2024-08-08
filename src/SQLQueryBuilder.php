@@ -6,8 +6,6 @@ interface SQLQueryBuilder
 
     public function execinsert(string $table, array $data): SQLQueryBuilder;
 
-    public function execselect(string $table, array $columns): SQLQueryBuilder;
-
     public function execwhere(string $column, string $value): SQLQueryBuilder;
 
     public function execorwhere(string $column, string $value, string $operator = '='): SQLQueryBuilder;
