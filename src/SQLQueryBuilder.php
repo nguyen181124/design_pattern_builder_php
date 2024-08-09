@@ -3,6 +3,7 @@ namespace Nguyen\DesignPatterns;
 
 interface SQLQueryBuilder
 {
+    public function execselect(array $columns): SQLQueryBuilder;
 
     public function execinsert(string $table, array $data): SQLQueryBuilder;
 

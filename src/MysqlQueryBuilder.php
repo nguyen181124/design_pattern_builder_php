@@ -24,6 +24,15 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return (new static)->{"exec" . $name}(...$arguments);
     }
 
+    public function execselect(array $columns): SQLQueryBuilder
+    {
+        $this->query->type = 'select';
+        $this->query->select = empty($columns) ? "*" : implode(", ", $columns);
+
+
+        return $this;
+    }
+
     public function execinsert(string $table, array $data): SQLQueryBuilder
     {
         $columns = implode(", ", array_keys($data));
