@@ -33,6 +33,13 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
+    public function exectake(int $limit): SQLQueryBuilder
+    {
+        $this->query->limit = " LIMIT " . $limit;
+
+        return $this;
+    }
+
     public function execinsert(string $table, array $data): SQLQueryBuilder
     {
         $columns = implode(", ", array_keys($data));
