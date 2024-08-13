@@ -5,6 +5,8 @@ interface SQLQueryBuilder
 {
     public function execselect(array $columns): SQLQueryBuilder;
 
+    public function execcount(string $column): SQLQueryBuilder;
+
     public function exectake(int $limit): SQLQueryBuilder;
 
     public function execinsert(string $table, array $data): SQLQueryBuilder;
@@ -41,8 +43,12 @@ interface SQLQueryBuilder
 
     public function execgetSQL(): string;
 
+    public function execexists(string $table1, string $table2, array $data): SQLQueryBuilder;
+
     public function executeQuery(): array;
 
     public function executeAlterQuery(): bool;
+
+    public function executeExistsQuery(): bool;
 }
 

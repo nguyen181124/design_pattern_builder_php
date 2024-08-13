@@ -29,6 +29,13 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         $this->query->type = 'select';
         $this->query->select = empty($columns) ? "*" : implode(", ", $columns);
 
+        return $this;
+    }
+
+    public function execcount(string $column): SQLQueryBuilder
+    {
+        $this->query->type = 'select';
+        $this->query->select = "COUNT" . "(" . $column . ")";
 
         return $this;
     }
@@ -93,7 +100,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
             $this->query->notwhere = [];
         }
 
-        $this->query->notwhere[] = " $column $operator '$value'";   
+        $this->query->notwhere[] = " $column $operator '$value'";
 
         return $this;
     }
@@ -154,17 +161,17 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     {
         $this->query->type = ['select'];
         $this->query->limit = " WHERE $column IN (";
-    
+
         $values = [];
         foreach ($data as $value) {
             $values[] = "'" . $value . "'";
         }
-    
+
         $this->query->limit .= implode(', ', $values) . ')';
-    
+
         return $this;
     }
-    
+
 
     public function execjoins(string $table, string $join, string $column1, string $column2): SQLQueryBuilder
     {
@@ -214,6 +221,20 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
+    public function execexists(string $table1, string $table2, array $data): SQLQueryBuilder
+    {
+        $setClauses = [];
+
+        foreach ($data as $column => $value) {
+            $setClauses[] = "$column = '" . $value . "'";
+        }
+
+        $this->query->exists = "SELECT * FROM " . $table1 . " WHERE EXISTS " . "(SELECT * FROM " . $table2 . " WHERE " . implode('AND ', $setClauses) . ")";
+        $this->query->type = 'exists';
+
+        return $this;
+    }
+
     public function execgetSQL(): string
     {
         $query = $this->query;
@@ -256,7 +277,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
 
         return $ar;
     }
-    
+
     public function executeAlterQuery(): bool
     {
         $sql = $this->query->alter;
@@ -268,6 +289,22 @@ class MysqlQueryBuilder implements SQLQueryBuilder
             return true;
         } catch (\PDOException $e) {
             echo "Error executing ALTER query: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function executeExistsQuery(): bool
+    {
+        $sql = $this->query->exists;
+        print_r($sql);
+
+        $db = new Database();
+        try {
+            $stmt = $db->connect('localhost', 'root', 'abc1234', 'BT')->prepare($sql);
+            $stmt->execute();
+            return true;
+        } catch (\PDOException $e) {
+            echo "Error executing EXISTS query: " . $e->getMessage();
             return false;
         }
     }
