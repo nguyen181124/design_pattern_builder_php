@@ -1,4 +1,5 @@
 <?php
+
 namespace Nguyen\DesignPatterns;
 
 class MysqlQueryBuilder implements SQLQueryBuilder
@@ -49,13 +50,13 @@ class MysqlQueryBuilder implements SQLQueryBuilder
 
     public function execinsert(string $table, array $data): SQLQueryBuilder
     {
-        $columns = implode(", ", array_keys($data));
+
+        $this->query->type = 'insert';
         $values = implode(", ", array_map(function ($value) {
             return "'" . $value . "'";
         }, array_values($data)));
 
-        $this->query->base = "INSERT INTO " . $table . " ($columns) VALUES ($values)";
-        $this->query->type = 'insert';
+        $this->query->insert = "INSERT INTO " . $table . " VALUES ($values)";
 
         return $this;
     }
@@ -129,7 +130,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
 
     public function execdelete(string $table, string $column, string $value, string $operator = '='): SQLQueryBuilder
     {
-        $this->query->base = "DELETE FROM " . $table . " WHERE " . $column . " " . $operator . " '" . $value . "'";
+        $this->query->delete = "DELETE FROM " . $table . " WHERE " . $column . " " . $operator . " '" . $value . "'";
         $this->query->type = 'delete';
 
         return $this;
@@ -143,7 +144,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
             $setClauses[] = "$column = '" . $value . "'";
         }
 
-        $this->query->base = "UPDATE " . $table . " SET " . implode(", ", $setClauses);
+        $this->query->update = "UPDATE " . $table . " SET " . implode(", ", $setClauses);
         $this->query->type = 'update';
 
         return $this;
@@ -259,7 +260,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $sql;
     }
 
-    public function executeQuery(): array
+    public function executeSelectQuery(): array
     {
         $sql = $this->execgetSQL();
         print_r($sql);
@@ -293,21 +294,25 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         }
     }
 
-    public function executeExistsQuery(): bool
+    public function executeQuery(): bool
     {
-        $sql = $this->query->exists;
-        print_r($sql);
-
+        $sql = $this->query->insert ?? $this->query->delete ?? $this->query->update ?? $sql = $this->query->exists;
+    
+        if (empty($sql)) {
+            // Handle case where neither insert nor delete is present
+            return false; // or throw an exception
+        }
+    
         $db = new Database();
         try {
             $stmt = $db->connect('localhost', 'root', 'abc1234', 'BT')->prepare($sql);
             $stmt->execute();
             return true;
         } catch (\PDOException $e) {
-            echo "Error executing EXISTS query: " . $e->getMessage();
+            echo "Error executing query: " . $e->getMessage();
             return false;
         }
     }
-
+    
 }
 

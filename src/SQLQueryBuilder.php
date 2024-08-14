@@ -45,10 +45,10 @@ interface SQLQueryBuilder
 
     public function execexists(string $table1, string $table2, array $data): SQLQueryBuilder;
 
-    public function executeQuery(): array;
+    public function executeSelectQuery(): array;
 
     public function executeAlterQuery(): bool;
-
-    public function executeExistsQuery(): bool;
+    
+    public function executeQuery(): bool;
 }
 

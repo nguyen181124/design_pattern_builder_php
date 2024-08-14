@@ -155,3 +155,76 @@ Kết quả
 
 ![Alt text](img/ketqua.png)
 
+## Cách sử dụng Package PHP 
+
+### Cài đặt
+
+    composer require nguyenzz/design-patterns:dev-main
+
+### Cách sử dụng cơ bản
+
+#### 1. Sử dụng composer autoloader
+
+    require "../vendor/autoload.php";
+    use Nguyen\DesignPatterns\Database;
+    use Nguyen\DesignPatterns\MysqlQueryBuilder;
+
+#### 2. Thiết lập kết nối CSDL
+
+    $db = Database::connect(string $hostname, string $username, string $password, string $dbname);
+
+#### 3. Sử dụng trình tạo truy vấn
+1. Lấy toàn bộ dữ liệu của bảng "city"
+
+        $result =  MysqlQueryBuilder::table("city")->executeSelectQuery();
+        print_r($result);
+
+1. Lấy dữ liệu cột "id" và "city_name" của bảng "city"
+
+        $result =  MysqlQueryBuilder::table("city")->select(["id", "city_name"])->executeSelectQuery();
+        print_r($result);
+
+1. Tìm số lượng tên thành phố trong bảng "city"
+
+        $result =  MysqlQueryBuilder::table("city")->count("id")->executeSelectQuery();
+        print_r($result);
+
+1. Thêm dữ liệu vào bảng "city"
+
+        $result = MysqlQueryBuilder::insert("city", ["6", "nguyen", "2", "453534"])->executeSelectQuery();
+        print_r($result);
+
+1. Tìm giá dữ liệu trong bảng "city"
+
+        $result = MysqlQueryBuilder::table("city")->where("city_name", "Hà Nội")->executeSelectQuery();
+        print_r($result);
+ 
+1. Sửa dữ liệu của bảng "city"
+
+        $result = MysqlQueryBuilder::update("city", ["id"=>"6", "city_name"=>"nguyen", "country_id" => "2", "population" => "323432"])->executeQuery();
+        print_r($result);
+
+1. Giới hạn dữ liệu trả về từ bảng "city"
+
+        $result = MysqlQueryBuilder::table("city")->limit(1, 3)->executeSelectQuery();
+        print_r($result);
+
+1. Thêm cột vào bảng "city"
+
+        $result = MysqlQueryBuilder::_alteradd("city", "acreage", "int")->executeAlterQuery();
+        print_r($result);
+
+1. Xóa cột ở bảng "city"
+
+        $result = MysqlQueryBuilder::_alterdrop("city", "acreage")->executeAlterQuery();
+        print_r($result);
+
+1. Sửa cột ở bảng "city"
+
+        $result = MysqlQueryBuilder::_altermodify("city", "acreage", "int")->executeAlterQuery();
+        print_r($result);
+
+1. Kiểm tra sự tồn tại của dữ liệu trong bảng "city"
+
+        $result = MysqlQueryBuilder::exists("city", "country", ["city_name" => "nguyen"])->executeQuery();
+        print_r($result);
