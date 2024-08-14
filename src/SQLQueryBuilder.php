@@ -33,13 +33,13 @@ interface SQLQueryBuilder
 
     public function execfirst(): SQLQueryBuilder;
 
-    public function exec_alteradd(string $table, string $column, string $data_type): SQLQueryBuilder;
+    public function execalteradd(string $table, string $column, string $data_type): SQLQueryBuilder;
 
-    public function exec_alterdrop(string $table, string $column): SQLQueryBuilder;
+    public function execalterdrop(string $table, string $column): SQLQueryBuilder;
 
-    public function exec_altermodify(string $table, string $column, string $data_type): SQLQueryBuilder;
+    public function execaltermodify(string $table, string $column, string $data_type): SQLQueryBuilder;
 
-    public function exec_rename(string $table, string $newname): SQLQueryBuilder;
+    public function execrename(string $table, string $newname): SQLQueryBuilder;
 
     public function execgetSQL(): string;
 

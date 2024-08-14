@@ -8,8 +8,11 @@ class MysqlQueryBuilder implements SQLQueryBuilder
 
     protected $table;
 
-    public function __construct()
+    private $db;
+
+    public function __construct($db)
     {
+        $this->db = $db;
         $this->query = new \stdClass();
         $this->query->select = "*";
     }
@@ -190,7 +193,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
-    public function exec_alteradd(string $table, string $column, string $data_type): SQLQueryBuilder
+    public function execalteradd(string $table, string $column, string $data_type): SQLQueryBuilder
     {
         $this->query->alter = "ALTER TABLE " . $table . " ADD COLUMN " . $column . " " . $data_type;
         $this->query->type = 'alter';
@@ -198,7 +201,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
-    public function exec_alterdrop(string $table, string $column): SQLQueryBuilder
+    public function execalterdrop(string $table, string $column): SQLQueryBuilder
     {
         $this->query->alter = "ALTER TABLE " . $table . " DROP COLUMN " . $column;
         $this->query->type = 'alter';
@@ -206,7 +209,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
-    public function exec_altermodify(string $table, string $column, string $data_type): SQLQueryBuilder
+    public function execaltermodify(string $table, string $column, string $data_type): SQLQueryBuilder
     {
         $this->query->alter = "ALTER TABLE " . $table . " MODIFY COLUMN " . $column . " " . $data_type;
         $this->query->type = 'alter';
@@ -214,7 +217,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
-    public function exec_rename(string $table, string $newname): SQLQueryBuilder
+    public function execrename(string $table, string $newname): SQLQueryBuilder
     {
         $this->query->alter = "ALTER TABLE " . $table . " RENAME TO " . $newname;
         $this->query->type = 'alter';
@@ -266,7 +269,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         print_r($sql);
         $db = new Database();
         try {
-            $qr = $db->connect('localhost', 'root', 'abc1234', 'BT')->query($sql);
+            $qr = $this->db->query($sql);
         } catch (\PDOException $e) {
             echo "Error executing query: " . $e->getMessage();
             return [];
@@ -285,7 +288,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         print_r($sql);
         $db = new Database();
         try {
-            $stmt = $db->connect('localhost', 'root', 'abc1234', 'BT')->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->execute();
             return true;
         } catch (\PDOException $e) {
@@ -305,7 +308,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     
         $db = new Database();
         try {
-            $stmt = $db->connect('localhost', 'root', 'abc1234', 'BT')->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->execute();
             return true;
         } catch (\PDOException $e) {
