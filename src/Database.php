@@ -3,7 +3,7 @@ namespace Nguyen\DesignPatterns;
 
 class Database
 {
-    public function connect(string $hostname, string $username, string $password, string $dbname): ?\PDO
+    public static function connect(string $hostname, string $username, string $password, string $dbname): ?\PDO
     {
         try {
             $dsn = "mysql:host=$hostname;dbname=$dbname;charset=utf8";
