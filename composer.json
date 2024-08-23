@@ -11,5 +11,13 @@
             "name": "Nguyen181124",
             "email": "nguyen181124@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "pestphp/pest": "^2.35"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }
